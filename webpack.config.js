@@ -146,7 +146,7 @@ module.exports = {
       //对输出的css文件进行分、重命名
       filename: 'css/bundle.[hash:8].css',
     }),
-    new OptimizeCssAssetsWebpackPlugin()//css代码压缩
+    // new OptimizeCssAssetsWebpackPlugin()//css代码压缩
   ],
   mode: 'development',//运行模式
   // mode: 'production',
