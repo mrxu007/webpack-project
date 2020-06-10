@@ -1,0 +1,25 @@
+/* body {
+  background: red;
+  display: flex;
+  backface-visibility: hidden;
+} */
+.img_wrap{
+  width: 100%;
+  height: 880px;
+  /* background: gray; */
+}
+.img1{
+  width: 25%;
+  height: 25%;
+  background: url(../images/react.svg) no-repeat;
+}
+.img2{
+  width: 25%;
+  height: 25%;
+  background: url(../images/logo.png) no-repeat;
+}
+.img3{
+  width: 25%;
+  height: 25%;
+  background: url(../images/shield-large.svg) no-repeat;
+}

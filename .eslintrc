@@ -1,0 +1,13 @@
+{
+  "extends": "airbnb-base",
+  "rules": {
+   //未定义的变量不能使用
+   "no-undef": 0,
+   //一行结束后面不要有空格
+   "no-trailing-spaces": 1,
+   //强制驼峰命名法
+   "camelcase": 2,
+   //不能使用console
+   "no-console": "off"
+  }
+}
