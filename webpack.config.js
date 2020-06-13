@@ -7,7 +7,8 @@ module.exports = {
   entry: './src/js/index.js',//文件入口
   output: {//文件输出
     filename: 'js/bundle.[hash:8].js',
-    path: resolve(__dirname, 'dist')
+    path: resolve(__dirname, 'dist'),
+    publicPath: ''
   },
   module: {//模块
     rules: [
@@ -37,10 +38,10 @@ module.exports = {
           {
             loader: 'url-loader',
             options: {
-              limit: 8 * 1024,//用于base64转换，base64图片不会请求http，减少小体积图片的请求。
+              limit: 1 * 1024,//用于base64转换，base64图片不会请求http，减少小体积图片的请求。
               //大于这个限制的图片使用依赖file-loader解析图片
               outputPath: 'images/',
-              publicPath: '../../dist/images',
+              publicPath: '../images',
               //因为打包后抽离插件的影响，css中所引用的图片相对地址发生了改变，所以要设置这项
               name: '[hash:8].[ext]'
             }
@@ -59,7 +60,7 @@ module.exports = {
           }
         }
       },
-      {
+      {//es6高级语法转es5
         test: /\.js$/,
         exclude: /node_modules/,//依赖库不需要进行转换
         include: resolve(__dirname, 'src'),
@@ -151,7 +152,7 @@ module.exports = {
   mode: 'development',//运行模式
   // mode: 'production',
   // devtool: 'source-map',//映射源代码/，用于上线环境的调试
-  externals: {//外部引入配置
+  externals: {//忽略外部引入的库，作用：这个库将不会被打包
     jquery: 'jQuery'
   },
   devServer: {//本地运行服务器配置
