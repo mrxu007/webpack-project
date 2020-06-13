@@ -49,13 +49,15 @@ module.exports = {
         ]
       },
       {//elint处理js
+        enforce: 'pre',//强制这个loader比下面loader先执行，我们都知道loader从下往上，从右往左,
+        //记住啊 这个bug找了一下午，elint和babel在抢js文件
         test: /\.js$/,
         exclude: /node_modules/,
         include: resolve(__dirname, 'src'),
         use: {
           loader: 'eslint-loader',
           options: {
-            enforce: 'pre',//强制这个loader比下面loader先执行，我们都知道loader从下往上，从右往左
+            // enforce: 'pre',   千万别把enforce放这里，血的教训
             fix: true//强大的属性帮我们自动改正错误的格式！！
           }
         }
@@ -158,7 +160,7 @@ module.exports = {
   devServer: {//本地运行服务器配置
     contentBase: resolve(__dirname, 'dist'),//解析文件地址
     compress: true,//打开gzip压缩
-    port: 8080,//端口号
+    port: 3000,//端口号
     open: true//自动打开浏览器
   }
 }
