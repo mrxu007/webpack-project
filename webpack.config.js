@@ -3,6 +3,9 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
+//这项设置用于兼容css处理,让bowerslist去读取当前环境，并做出兼容处理
+//webpack.config.js中的mode设置不与当前设置的环境冲突。只为了适配bowerslist配置
+process.env.NODE_ENV = 'development';
 module.exports = {
   //注意数组形式的写法，不是多入口文件，而是将后者合并到前者
   //多入口文件需采用对象的方式
