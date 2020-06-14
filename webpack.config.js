@@ -4,7 +4,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 module.exports = {
-  entry: './src/js/index.js',//文件入口
+  //注意数组形式的写法，不是多入口文件，而是将后者合并到前者
+  //多入口文件需采用对象的方式
+  //这里这么写是为了解决开启HMR功能导致，html文件原有的热更新功能失效。
+  entry: ['./src/js/index.js', './src/index.html'],//文件入口
   output: {//文件输出
     filename: 'js/bundle.[hash:8].js',
     path: resolve(__dirname, 'dist'),
@@ -78,8 +81,8 @@ module.exports = {
       {//处理styl文件
         test: /\.styl/,
         use: [
-          // 'style-loader',
-          MiniCssExtractPlugin.loader,
+          'style-loader',
+          // MiniCssExtractPlugin.loader,
           'css-loader',
           {
             loader: 'postcss-loader',
@@ -97,8 +100,8 @@ module.exports = {
       {//处理less
         test: /\.less$/,
         use: [
-          // 'style-loader',
-          MiniCssExtractPlugin.loader,
+          'style-loader',
+          // MiniCssExtractPlugin.loader,
           'css-loader',
           {
             loader: 'postcss-loader',
@@ -116,8 +119,9 @@ module.exports = {
       {//处理css
         test: /\.css$/,
         use:[
-          // 'style-loader', 
-          MiniCssExtractPlugin.loader,
+          'style-loader', 
+          //抽离css功能请在生产模式再开启，不然会与HMR功能冲突
+          // MiniCssExtractPlugin.loader,
           'css-loader',
           {
             loader: 'postcss-loader',
@@ -145,10 +149,11 @@ module.exports = {
       // },
       // hash: true//插入的js尾部生成hash戳
     }),
-    new MiniCssExtractPlugin({//css抽离
-      //对输出的css文件进行分、重命名
-      filename: 'css/bundle.[hash:8].css',
-    }),
+    //抽离css功能请在生产模式再开启，不然会与HMR功能冲突
+    // new MiniCssExtractPlugin({//css抽离
+    //   //对输出的css文件进行分、重命名
+    //   filename: 'css/bundle.[hash:8].css',
+    // }),
     // new OptimizeCssAssetsWebpackPlugin()//css代码压缩
   ],
   mode: 'development',//运行模式
@@ -161,6 +166,8 @@ module.exports = {
     contentBase: resolve(__dirname, 'dist'),//解析文件地址
     compress: true,//打开gzip压缩
     port: 3000,//端口号
-    open: true//自动打开浏览器
+    // open: true,//自动打开浏览器
+    //开启HMR: 热模块替换：一个模块发生变化，只会重新打包这个模块(而不是打包所有模块)
+    hot: true
   }
 }

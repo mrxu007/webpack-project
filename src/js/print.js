@@ -1,1 +1,5 @@
-console.log('print.js文件被加载！！！');
+console.log('print文件被加载！！！+++++');
+function print() {
+  console.log('hello worldssss');
+}
+export default print;
