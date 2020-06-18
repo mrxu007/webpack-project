@@ -3,8 +3,9 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
-//这项设置用于兼容css处理,让bowerslist去读取当前环境，并做出兼容处理
-//webpack.config.js中的mode设置不与当前设置的环境冲突。只为了适配bowerslist配置
+
+//webpack.config.js中的mode设置不与当前设置的环境冲突。只为了适配browerslist配置
+//这项设置用于兼容css处理,让browerslist去读取当前环境，并做出兼容处理
 process.env.NODE_ENV = 'development';
 module.exports = {
   //注意数组形式的写法，不是多入口文件，而是将后者合并到前者
@@ -21,6 +22,7 @@ module.exports = {
       {//处理文字图片
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         exclude: resolve(__dirname,'src/images'),
+        include: resolve(__dirname, 'src/font'),
         use: {
           loader: 'file-loader',
           options: {
@@ -40,6 +42,8 @@ module.exports = {
       },
       {//处理import导入的图片
         test: /\.(gif|png|jpeg|svg|jpg)$/,
+        exclude: resolve(__dirname, 'src/font'),
+        include: resolve(__dirname, 'src/images'),
         use: [
           {
             loader: 'url-loader',
@@ -47,7 +51,9 @@ module.exports = {
               limit: 1 * 1024,//用于base64转换，base64图片不会请求http，减少小体积图片的请求。
               //大于这个限制的图片使用依赖file-loader解析图片
               outputPath: 'images/',
-              publicPath: '../images',
+              publicPath: './images',//这个公共配置和你的抽离css有关，
+              //css未抽离时图片地址是相对与index.html文件
+              //css抽离后，图片地址是相对于css文件夹
               //因为打包后抽离插件的影响，css中所引用的图片相对地址发生了改变，所以要设置这项
               name: '[hash:8].[ext]'
             }
@@ -72,14 +78,45 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,//依赖库不需要进行转换
         include: resolve(__dirname, 'src'),
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              '@babel/preset-env'
-            ]
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              "presets": [
+                [
+                  '@babel/preset-env',
+                  {
+                    //按需加载
+                    useBuiltIns: 'usage',
+                    //指定core-js版本
+                    corejs: {
+                      version: 3
+                    },
+                    //指定兼容性做到那些版本浏览器
+                    targets: {
+                      chrome: '60',
+                      firefox: '60',
+                      ie: '9',
+                      safari: '10',
+                      edge: '17'
+                    }
+                  }
+                ] 
+              ],
+              //开启babel缓存
+              //第二次构建时，会读取之前的缓存，提高速度
+              cacheDirectory: true
+            }
           }
-        }
+        ]
+        // {
+        //   loader: 'babel-loader',
+        //   options: {
+        //     presets: [
+        //       '@babel/preset-env'
+        //     ]
+        //   }
+        // }
       },
       {//处理styl文件
         test: /\.styl/,

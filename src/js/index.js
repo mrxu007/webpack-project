@@ -4,10 +4,14 @@ import '../css/index3.styl';
 import '../css/iconfont.css';
 import print from './print';
 
+const sum = function sum(a) {
+  console.log(a);
+};
+sum(10);
 console.log('index.js文件++++');
 // 开启非入口js文件的热更新,由你自己引入其他js文件
 if (module.hot) {
-  module.hot.accept('./print.js', () => {
+  module.hot.accept('./print', () => {
     print();
   });
 }
